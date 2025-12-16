@@ -32,3 +32,6 @@ https://doi.org/10.1002/aesr.202100143.
 
 Solar spectrum (AM1.5G) was downloaded from 
 https://www.pveducation.org/pvcdrom/appendices/standard-solar-spectra
+
+CIE spectral luminous efficiency for photopic vision was applied for illuminance level calculation
+https://doi.org/10.25039/CIE.DS.dktna2s3
