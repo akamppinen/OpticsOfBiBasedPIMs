@@ -51,7 +51,7 @@ Fsolar = (wl*1e-9)/(consts.h*consts.c).*Bsolar; % Photon flux (s^-1m^-2nm^-1)
 
 % Indoor irradiance
 filepathSpectra = '.\';
-filenameSpectra = {'solar','B4_LED_spectrum_at_1000lux',...
+filenameSpectra = {'solar',...
     '2700K_1000lux_wLED.txt','4000K_1000lux_wLED_Spectroradiometer.txt',...
     '5000K_1010lux_wLED','6500K_1010lux_wLED'};
 
@@ -312,4 +312,3 @@ end
 
 % Save workspace
 save([dataFolder,'\workspace.mat']);
-
