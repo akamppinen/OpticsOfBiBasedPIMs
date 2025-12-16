@@ -37,7 +37,7 @@ for matindex = 1:Nlayers
             (consts.h*consts.c),1,sum(pos));
         Gx = zeros(1,sum(pos));
         for idxPos = 1:sum(pos)
-            Gx(idxPos) = numInt_v1(lambda(1),EgPVKwl,transpose(lambda(Glambdas)),...
+            Gx(idxPos) = numInt(lambda(1),EgPVKwl,transpose(lambda(Glambdas)),...
                 transpose(Glx(Glambdas,idxPos)));
         end
         % Thermalization
@@ -54,4 +54,5 @@ QxParasiticAbs = trapz(lambda,QparasiticAbs,1);
 % Q = Qthermalization + QparasiticAbs;
 QxAbsorption = QxThermalization + QxParasiticAbs;
 end
+
 
