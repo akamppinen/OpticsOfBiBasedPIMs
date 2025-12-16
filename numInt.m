@@ -1,4 +1,4 @@
-function I = numInt_v1(x1,x2,xData,yData)
+function I = numInt(x1,x2,xData,yData)
 %numInt performs numerical integration with Matlab's trapz function. It
 %pads inner points x with starting (x1) and ending (x2) points and linearly
 %extrapolates y data from inner points to the edges.
@@ -25,4 +25,5 @@ elseif x2<x1
 end
 Y = interp1(xData(xRange),yData(xRange),X,'linear','extrap');
 I = trapz(X,Y);
+
 end
