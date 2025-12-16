@@ -2,30 +2,6 @@
 % Aleksi Kamppinen
 % Solar Energy Materials and Systems, University of Turku
 
-% Version 2
-% Scale the nImag spectra
-% Maintain the same nReal after scaling the imaginary part (/absorption)
-% Version 3
-% Add band gap variation for sensitivity analysis
-% Remove Tlattice variation. No data about Eg change available (here, maybe
-%   there is in the literature).
-% Version 3.1 
-% Store photogeneration profiles 
-% Otherwise, basically the same version
-% Only consider one band gap for each material
-% Version 4
-% Updated indoor irradiance
-% Some non-functional updates: automatic date, script cleaning and
-% commenting, variable name updates
-% Version 5 
-% Related to the manuscript revision (Advanced Optical Materials):
-% Use n,k average spectra (average over different "acceptable" MSE samples)
-% Add illuminance level setting 
-% Revise irradiance spectra data storage structure
-% Study different indoor spectra
-% 5.2
-% Add nScale for sensitivity analysis
-
 % Clear workspace
 clear all;
 
@@ -35,12 +11,7 @@ activeMat = 'CBI';
 
 % Data storage folder
 dateToday = datetime("today");
-% dataFolder = ['\\utu.fi\taltio\MaterialEngineering\SEMS\ajkamp\SolarCellSimulation\Data\OpticsOfBiBasedPIMs\',...
-%     num2str(year(dateToday)),'_',num2str(month(dateToday)),'_',num2str(day(dateToday)),'_',activeMat];
-% dataFolder = ['\\utu.fi\taltio\MaterialEngineering\SEMS\ajkamp\SolarCellSimulation\Data\OpticsOfBiBasedPIMs\',...
-%     num2str(year(dateToday)),'_',num2str(month(dateToday)),'_',num2str(day(dateToday)),'_',activeMat,'_EgSensitivity'];
-dataFolder = ['\\utu.fi\taltio\MaterialEngineering\SEMS\ajkamp\SolarCellSimulation\Data\OpticsOfBiBasedPIMs\',...
-    num2str(year(dateToday)),'_',num2str(month(dateToday)),'_',num2str(day(dateToday)),'_',activeMat,'_Revision_nSensitivity'];
+dataFolder = ['.\',num2str(year(dateToday)),'_',num2str(month(dateToday)),'_',num2str(day(dateToday)),'_',activeMat,'_nSensitivity'];
 
 [~,msg,msgID] = mkdir(dataFolder);
 if ~isempty(msg)
@@ -79,7 +50,7 @@ Bsolar = spline(AM15{:,1},AM15{:,2},wl);
 Fsolar = (wl*1e-9)/(consts.h*consts.c).*Bsolar; % Photon flux (s^-1m^-2nm^-1)
 
 % Indoor irradiance
-filepathSpectra = '\\utuhome.utu.fi\ajkamp\Documents\Solar cell simulation\Code archive for specific manuscripts\Optics of Bi based PIMs';
+filepathSpectra = '.\';
 filenameSpectra = {'solar','B4_LED_spectrum_at_1000lux',...
     '2700K_1000lux_wLED.txt','4000K_1000lux_wLED_Spectroradiometer.txt',...
     '5000K_1010lux_wLED','6500K_1010lux_wLED'};
@@ -122,7 +93,7 @@ for idxSpectrum = 1:length(filenameSpectra)
             Btot{idxSpectrum} = zeros(length(desiredIlluminance),1);
             IntensityFactors{idxSpectrum} = zeros(length(desiredIlluminance),1);
             for idxIlluminance = 1:length(desiredIlluminance)
-                Illuminance = Illuminance_v1([lambda,B_indoor],effPhotopicVision); % lux
+                Illuminance = Illuminance([lambda,B_indoor],effPhotopicVision); % lux
                 IntensityFactors{idxSpectrum}(idxIlluminance) = ...
                     desiredIlluminance(idxIlluminance)/Illuminance;
                 B{idxSpectrum}{idxIlluminance} = B_indoor*...
@@ -190,7 +161,7 @@ nRealActiveRef = rmmissing(opticalData.(strcat(activeMat,'_n')));
 nImagActiveRef = rmmissing(opticalData.(strcat(activeMat,'_k')));
 
 %%% Set cell properties
-[~,~,nReal,nImag,N_EDphases,W_EDphases,Nlayers] = SetUpCell_v2(materials,...
+[~,~,nReal,nImag,N_EDphases,W_EDphases,Nlayers] = SetUpCell(materials,...
     tInitial,indActiveLayer,ActiveLayerVis,indLastOpticsLayer,lambda,AM15,opticalData,consts);
 clear('opticalData')
 
@@ -246,7 +217,7 @@ for idxnScale = 1:length(nScale)
             [xPos,xMat,~,tCumsum] = xDiscretization(t,N_opticalSublayers,p);
 
             % Optics
-            [E2,~,R,A,T,~] = CalcSolarCellOptics_v4(...
+            [E2,~,R,A,T,~] = CalcSolarCellOptics(...
                 nReal(:,1:(indLastOpticsLayer+2)),nImag(:,1:(indLastOpticsLayer+2)),...
                 t(1:indLastOpticsLayer),xPos(ismember(xMat,(1:indLastOpticsLayer))),...
                 xMat(ismember(xMat,(1:indLastOpticsLayer))),lambda,...
@@ -272,7 +243,7 @@ for idxnScale = 1:length(nScale)
 
                         % Photogeneration
                         [Gx,Glx,~,~,~,~,~,~] = ...
-                            absorption_v3_2(E2,xPos(ismember(xMat,(1:indLastOpticsLayer))),...
+                            absorption(E2,xPos(ismember(xMat,(1:indLastOpticsLayer))),...
                             xMat(ismember(xMat,(1:indLastOpticsLayer))),...
                             nReal(:,1:(indLastOpticsLayer+2)),nImag(:,1:(indLastOpticsLayer+2)),...
                             EgActiveMATref(idxEg),EgWl,indActiveLayer,...
@@ -281,7 +252,7 @@ for idxnScale = 1:length(nScale)
 
                         % Total photogeneration
                         StoreTotGphPred(idxIfactor,idxSpectrum,idxActiveMATt,idxnScale,idxEg) = ...
-                            numInt_v1(tCumsum(indActiveLayer)*1e-9,tCumsum(indActiveLayer+1)*1e-9,...
+                            numInt(tCumsum(indActiveLayer)*1e-9,tCumsum(indActiveLayer+1)*1e-9,...
                             xPos(xMat==indActiveLayer)*1e-9,Gx);
 
                         if ismembertol(idxIfactor,length(IntensityFactors{idxSpectrum}),1e-5)
@@ -298,7 +269,7 @@ for idxnScale = 1:length(nScale)
                                 idxLambda = 1;
                                 while lambda(idxLambda)<=EgWl && lambda(idxLambda)<length(lambda)
                                     StoreGphPred(idxSpectrum,idxActiveMATt,idxLambda,idxnScale) = ...
-                                        numInt_v1(tCumsum(indActiveLayer)*1e-9,tCumsum(indActiveLayer+1)*1e-9,...
+                                        numInt(tCumsum(indActiveLayer)*1e-9,tCumsum(indActiveLayer+1)*1e-9,...
                                         xPos(xMat==indActiveLayer)*1e-9,Glx(idxLambda,:));
                                     idxLambda = idxLambda+1;
                                 end
@@ -341,3 +312,4 @@ end
 
 % Save workspace
 save([dataFolder,'\workspace.mat']);
+
