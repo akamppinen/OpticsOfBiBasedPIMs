@@ -1,5 +1,5 @@
 function [Bsolar,Fsolar,nReal,nImag,N_EDphases,W_EDphases,Nlayers] = ...
-    SetUpCell_v2(materials,t,indActiveLayer,ActiveLayerVis,indLastOpticsLayer,lambda,AM15,opticalData,consts)
+    SetUpCell(materials,t,indActiveLayer,ActiveLayerVis,indLastOpticsLayer,lambda,AM15,opticalData,consts)
 %SetUpPSC Assigns variables to workspace. 
 % Inputs:
 %   materials: material names
@@ -11,10 +11,6 @@ function [Bsolar,Fsolar,nReal,nImag,N_EDphases,W_EDphases,Nlayers] = ...
 %   AM15: solar spectrum (nm,Wm^-2nm^-1)
 %   opticalData: complex refractive indices of materials
 %   consts: structure array of some natural constants
-% Version 2
-% Add determination of partial coherence weights
-% Change of interpolation method from spline to makima
-% Add the possibility of a placeholder material ('Active')
 
 % Irradiation data
 lambda2 = AM15{:,1};                        % Wavelength (nm)
@@ -82,3 +78,4 @@ for i = 1:indLastOpticsLayer
 end
 W_EDphases = prod(Ws,2);
 end
+
