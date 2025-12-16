@@ -1,4 +1,4 @@
-function I = Illuminance_v1(B,effPhotopicVision)
+function I = Illuminance(B,effPhotopicVision)
 % Illuminance calculates illuminance value for a given radiance
 %Input:
 % B: [wavelength (nm), radiance (W m^-2 nm^-1)] array
