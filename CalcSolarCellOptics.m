@@ -4,23 +4,6 @@ function [E2ave,E,R,A,T,Pave] = CalcSolarCellOptics_v4(n_real,k,t,x_pos,x_mat,la
 %reflection from the cell, absorption in different layers and transmission
 %through the cell are calculated. A form of the transfer matrix method is
 %applied here.
-% Inputs
-%   n_real:
-%   k:
-%   t:
-%   x_pos:
-%   x_mat:
-%   lambda:
-%   N_EDphases:
-% Outputs
-%   E2ave:
-%   R:
-%   A:
-%   T:
-%   Pave:
-
-% Version 4.1
-% Add weights for averaging equidistant phases
 
 % Check variable dimensions
 if size(lambda,2)~=1
@@ -105,4 +88,5 @@ R = ones(length(lambda),1)-P_atInterfaces(:,1);
 A = P_atInterfaces(:,1:(end-1))-P_atInterfaces(:,2:end);
 T = P_atInterfaces(:,end);
 end
+
 
