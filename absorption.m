@@ -1,6 +1,6 @@
 function [Gx,Glx,QxThermalization,Qthermalization,QxParasiticAbs,...
     QparasiticAbs,QxAbsorption,AbsLayers] = ...
-    absorption_v3_2(E2,x_pos,x_mat,n_real,k,EgPVK,EgPVKwl,...
+    absorption(E2,x_pos,x_mat,n_real,k,EgPVK,EgPVKwl,...
     indPVKlayer,B_solar,lambda,Nlayers,consts,T)
 %   E2(x,lambda): The square of electric field (E^2)
 %   x_mat(1,x): Layer indices of x_pos
@@ -11,14 +11,6 @@ function [Gx,Glx,QxThermalization,Qthermalization,QxParasiticAbs,...
 %   Eg: Bandgap vector (0 if layer is not an active layer) (eV)
 %   B_solar(lambda,1): Irradiance (W/(m^2nm)
 %   lambda(lambda,1): Wavelengths (nm)
-
-% Version 3
-% Based on absorption_v1_2
-% Remove unnecessary variables: dx,dLambda
-% Gx by integration of Gxl over wavelength until band gap
-% Version 3.2
-% Test version for energy conservatino tests
-% Wavelength specific outputs
 
 % Transpose E2
 E2 = transpose(E2);
@@ -62,3 +54,4 @@ QxParasiticAbs = trapz(lambda,QparasiticAbs,1);
 % Q = Qthermalization + QparasiticAbs;
 QxAbsorption = QxThermalization + QxParasiticAbs;
 end
+
