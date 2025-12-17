@@ -33,5 +33,9 @@ https://doi.org/10.1002/aesr.202100143.
 Solar spectrum (AM1.5G) was downloaded from 
 https://www.pveducation.org/pvcdrom/appendices/standard-solar-spectra
 
+Indoor spectrum for the 6500 K colour temperature was previously published in
+N. Lamminen et al., ACS Energy Lett. 2025, 10, 7, 3415–3418. 
+https://doi.org/10.1021/acsenergylett.5c01472
+
 CIE spectral luminous efficiency for photopic vision was applied for illuminance level calculation
 https://doi.org/10.25039/CIE.DS.dktna2s3
